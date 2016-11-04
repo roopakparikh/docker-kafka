@@ -1,10 +1,8 @@
-apiVersion: apps/v1alpha1
-kind: PetSet
+apiVersion:  extensions/v1beta1
+kind: DaemonSet
 metadata:
   name: kafka
 spec:
-  serviceName: "kafka"
-  replicas: 3
   template:
     metadata:
       labels:
@@ -12,10 +10,9 @@ spec:
       annotations:
         pod.alpha.kubernetes.io/initialized: "true"
     spec:
-      terminationGracePeriodSeconds: 10
       containers:
       - name: kafka
-        image: docker.io/paulbrown/kafka:latest
+        image: docker.io/rparikh/kafka:latest
         imagePullPolicy: Always
         ports:
           - containerPort: 9092
@@ -23,12 +20,7 @@ spec:
         volumeMounts:
         - name: data
           mountPath: /data
-  volumeClaimTemplates:
-  - metadata:
-      name: data
-    spec:
-      accessModes:
-        - ReadWriteOnce
-      resources:
-        requests:
-          storage: 1Gi
+      volumes:
+      - name: data
+        hostPath:
+          path: /kafka/data

@@ -7,9 +7,11 @@ metadata:
   labels:
     service: kafka
 spec:
+  type: NodePort
   ports:
     - name: broker
       port: 9092
-  clusterIP: None
+      targetPort: 9092
+      protocol: TCP
   selector:
     app: kafka
